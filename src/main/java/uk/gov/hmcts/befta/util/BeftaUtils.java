@@ -15,7 +15,7 @@ import io.restassured.internal.util.IOUtils;
 import lombok.extern.slf4j.Slf4j;
 import uk.gov.hmcts.befta.exception.FunctionalTestException;
 import uk.gov.hmcts.befta.exception.JsonStoreCreationException;
-import uk.gov.hmcts.befta.featuretoggle.FeatureToggleInfo;
+import uk.gov.hmcts.befta.featuretoggle.ScenarioFeatureToggleInfo;
 
 @Slf4j
 public class BeftaUtils {
@@ -71,7 +71,7 @@ public class BeftaUtils {
         }
     }
 
-    public static void skipScenario(Scenario scenario, FeatureToggleInfo toggleInfo) {
+    public static void skipScenario(Scenario scenario, ScenarioFeatureToggleInfo toggleInfo) {
         String skipReason = String.format(
                 "The scenario %s is being skipped because of feature(s) toggled off: %s",
                 getScenarioTag(scenario), toggleInfo.getDisabledFeatureFlags());

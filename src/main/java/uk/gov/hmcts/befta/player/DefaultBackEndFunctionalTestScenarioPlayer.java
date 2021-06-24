@@ -56,7 +56,7 @@ import uk.gov.hmcts.befta.exception.InvalidTestDataException;
 import uk.gov.hmcts.befta.exception.UnconfirmedApiCallException;
 import uk.gov.hmcts.befta.exception.UnconfirmedDataSpecException;
 import uk.gov.hmcts.befta.factory.BeftaScenarioContextFactory;
-import uk.gov.hmcts.befta.featuretoggle.FeatureToggleInfo;
+import uk.gov.hmcts.befta.featuretoggle.ScenarioFeatureToggleInfo;
 import uk.gov.hmcts.befta.featuretoggle.FeatureToggleService;
 import uk.gov.hmcts.befta.util.BeftaUtils;
 import uk.gov.hmcts.befta.util.EnvironmentVariableUtils;
@@ -82,11 +82,11 @@ public class DefaultBackEndFunctionalTestScenarioPlayer implements BackEndFuncti
     @Before
     public void cucumberPrepare(Scenario scenario) {
         this.scenario = scenario;
-        FeatureToggleService toggleService = BeftaMain.getFeatureToggleService();
+        FeatureToggleService<Scenario, ScenarioFeatureToggleInfo> toggleService = BeftaMain.getFeatureToggleService();
         if (toggleService != null) {
             try {
-                FeatureToggleInfo toggleInfo = toggleService.getToggleStatusFor(scenario);
-                if (toggleInfo != null && toggleInfo.isAnyDisabled()) {
+                ScenarioFeatureToggleInfo toggleInfo = toggleService.getToggleStatusFor(scenario);
+                if (toggleInfo != null && !toggleInfo.shouldScenarioBeRun()) {
                     BeftaUtils.skipScenario(scenario, toggleInfo);
                 }
             } catch (FeatureToggleCheckFailureException e) {

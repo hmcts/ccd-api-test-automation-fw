@@ -1,5 +1,12 @@
 package uk.gov.hmcts.befta;
 
+import io.cucumber.core.cli.Main;
+import io.cucumber.java.Scenario;
+import uk.gov.hmcts.befta.featuretoggle.DefaultMultiSourceFeatureToggleService;
+import uk.gov.hmcts.befta.featuretoggle.ScenarioFeatureToggleInfo;
+import uk.gov.hmcts.befta.featuretoggle.FeatureToggleService;
+import uk.gov.hmcts.befta.player.DefaultBackEndFunctionalTestScenarioPlayer;
+import uk.gov.hmcts.befta.util.CucumberStepAnnotationUtils;
 import static java.lang.String.format;
 import static uk.gov.hmcts.befta.util.BeftaUtils.defaultLog;
 
@@ -15,7 +22,8 @@ public class BeftaMain {
 
     private static TestAutomationConfig config = TestAutomationConfig.INSTANCE;
     private static TestAutomationAdapter taAdapter = null;
-    private static FeatureToggleService featureToggleService = FeatureToggleService.DEFAULT_INSTANCE;
+
+    private static FeatureToggleService<Scenario, ScenarioFeatureToggleInfo> featureToggleService = new DefaultMultiSourceFeatureToggleService();
 
     public static void main(String[] args) {
         main(args, new DefaultTestAutomationAdapter());
@@ -31,6 +39,16 @@ public class BeftaMain {
 
     public static void main(String[] args, TestAutomationConfig config, TestAutomationAdapter taAdapter) {
         setUp(config, taAdapter);
+        try {
+            runCucumberMain(args);
+        } finally {
+            tearDown();
+        }
+    }
+
+    public static void main(String[] args, TestAutomationConfig config, TestAutomationAdapter taAdapter ,
+                            FeatureToggleService featureToggleService) {
+        setUp(config, taAdapter, featureToggleService);
         try {
             runCucumberMain(args);
         } finally {
@@ -89,11 +107,11 @@ public class BeftaMain {
         BeftaMain.config = config;
     }
 
-    public static FeatureToggleService getFeatureToggleService() {
+    public static FeatureToggleService<Scenario, ScenarioFeatureToggleInfo> getFeatureToggleService() {
         return featureToggleService;
     }
 
-    public static void setFeatureToggleService(FeatureToggleService featureToggle) {
+    public static void setFeatureToggleService(FeatureToggleService<Scenario, ScenarioFeatureToggleInfo> featureToggle) {
         BeftaMain.featureToggleService = featureToggle;
     }
 

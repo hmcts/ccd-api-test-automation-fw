@@ -139,7 +139,7 @@ wrapper.gradleVersion = '2.10'
 dependencies {
     compile "com.fasterxml.jackson.core:jackson-databind:2.10.0"
 
-    compile group: 'io.rest-assured', name: 'rest-assured', version: '3.1.0'
+    compile group: 'io.rest-assured', name: 'rest-assured', version: '4.4.0'
 
     compile group: 'io.cucumber', name: 'cucumber-java', version: '5.7.0'
     compile group: 'io.cucumber', name: 'cucumber-junit', version: '5.7.0'
